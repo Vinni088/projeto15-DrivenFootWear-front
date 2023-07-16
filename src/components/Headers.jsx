@@ -19,10 +19,12 @@ export default function HeaderSite() {
         </Pointer>
       </DivHeader>
       <DivHeader>
-        <Link to={"/Checkout"}> Seu Carrinho </Link>
         <Link to={"/home"}> Home </Link>
         <Link to={"/Products/Sapato feminino"}> Sapatos Femininos </Link>
         <Link to={"/Products/Sapato masculino"}> Sapatos Masculinos </Link>
+        <Link to={"/Checkout"}> Seu Carrinho </Link>
+        
+        
       </DivHeader>
     </>
   );

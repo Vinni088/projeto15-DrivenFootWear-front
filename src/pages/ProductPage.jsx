@@ -3,16 +3,16 @@ import HeaderSite from "../components/Headers";
 import styled from "styled-components";
 import { UserContext } from "/src/App.jsx";
 import { ThreeDots } from "react-loader-spinner";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 
-export default function ProductbyTypePage() {
+export default function ProductPage() {
   /* Ferramentas da Página */
   const navigate = useNavigate();
   const url = import.meta.env.VITE_API_URL;
   const User = useContext(UserContext).UserData;
   const setUser = useContext(UserContext).SetUserData;
-  let [Produtos, SetProdutos] = useState([]);
+  const params = useParams();
 
   /* Dados externos iniciais: */
   useEffect(() => {
@@ -31,8 +31,8 @@ export default function ProductbyTypePage() {
       });
     });
 
-    let promisse2 = axios.get(`${url}/products`, chave);
-    promisse2.then((resposta) => SetProdutos(resposta.data));
+    /*let promisse2 = axios.get(`${url}/products`, chave);
+    promisse2.then((resposta) => SetProdutos(resposta.data));*/
   }, []);
 
   if (!User) {
@@ -49,13 +49,7 @@ export default function ProductbyTypePage() {
       <HomeContainer>
         <HeaderSite />
         <ProductSpace>
-          {Produtos.map((produto) => {
-            return (
-            <ProductBox >
-              <img src={produto.foto}/>
-              <span> {produto.name} </span>
-            </ProductBox>
-          )})}
+            Produto de id {params.IdProduct}
         </ProductSpace>
       </HomeContainer>
     );

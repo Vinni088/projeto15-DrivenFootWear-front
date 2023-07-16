@@ -3,9 +3,11 @@ import styled from "styled-components";
 import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
+import ProductPage from "./pages/ProductPage";
 import CheckoutPage from "./pages/CheckoutPage";
-import ProductbyTypePage from "./pages/ProductbyTypePage";
 import { createContext, useState } from "react";
+import ProductbyTypePage from "./pages/ProductbyTypePage";
+
 
 export const UserContext = createContext();
 
@@ -20,7 +22,8 @@ export default function App() {
             <Route path="/" element={<SignInPage />} />
             <Route path="/SignUp" element={<SignUpPage />} />
             <Route path="/Home" element={<HomePage />} />
-            <Route path="/Products/:IdProduct" element={<ProductbyTypePage />} />
+            <Route path="/Products/:ProductType" element={<ProductbyTypePage />} />
+            <Route path="/Products/add/:IdProduct" element={<ProductPage />} />
             <Route path="/Checkout" element={<CheckoutPage/>}></Route>
           </Routes>
         </BrowserRouter>

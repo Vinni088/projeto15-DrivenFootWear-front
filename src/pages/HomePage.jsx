@@ -12,6 +12,7 @@ export default function HomePage() {
   const url = import.meta.env.VITE_API_URL;
   const User = useContext(UserContext).UserData;
   const setUser = useContext(UserContext).SetUserData;
+  let [Produtos, SetProdutos] = useState([]);
 
   /* Dados externos iniciais: */
   useEffect(() => {
@@ -31,25 +32,34 @@ export default function HomePage() {
     });
 
     let promisse2 = axios.get(`${url}/products`, chave);
-    promisse2.then((resposta) => console.log(resposta) )
+    promisse2.then((resposta) => {
+      console.log(resposta)
+      SetProdutos(resposta.data)
+    });
   }, []);
 
   if (!User) {
     return (
       <HomeContainer>
-        <HeaderSite/>
-        <Loading>
-        {<ThreeDots width={"150px"} color="#FFFFFF" />}
-        </Loading>
+        <HeaderSite />
+        <Loading>{<ThreeDots width={"150px"} color="#FFFFFF" />}</Loading>
       </HomeContainer>
     );
   }
 
-  if(User) {
+  if (User) {
     return (
       <HomeContainer>
-        <HeaderSite/>
-        
+        <HeaderSite />
+        <ProductSpace>
+          {Produtos.map((produto) => {
+            return (
+            <ProductBox key={produto._id} onClick={()=> navigate(`/Products/add/${produto._id}`)}>
+              <img src={produto.foto}/>
+              <span> {produto.name} </span>
+            </ProductBox>
+          )})}
+        </ProductSpace>
       </HomeContainer>
     );
   }
@@ -67,4 +77,36 @@ const Loading = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
+const ProductSpace = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 20px;
+
+  padding: 6px;
+  width: 100%;
+  height: 100%;
+
+  overflow-y: scroll;
+`;
+const ProductBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 150px;
+  height: 150px;
+  border-radius: 20px;
+  border: white 2px solid;
+  text-align: center;
+  :hover {
+    border: gray 2px solid;
+    cursor: pointer;
+  }
+  img {
+    height: 100px;
+  }
+`;
