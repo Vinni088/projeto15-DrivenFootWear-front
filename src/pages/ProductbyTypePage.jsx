@@ -1,36 +1,55 @@
 import axios from "axios";
+import HeaderSite from "../components/Headers";
 import styled from "styled-components";
-import Logo from "../components/Logo";
-import { BiExit } from "react-icons/bi";
 import { UserContext } from "/src/App.jsx";
 import { ThreeDots } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
-import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 
 export default function HomePage() {
+  /* Ferramentas da Página */
   const navigate = useNavigate();
-  return (
-    <HomeContainer>
-      <Header>
-        <Logo/>
-        <Pointer>
-            <BiExit
-              onClick={() => {
-                navigate("/");
-                localStorage.removeItem("token")
-              }}
-            />
-          </Pointer>
-      </Header>
-      <Header>
-        <Link to={"/Checkout"}> Seu Carrinho </Link>
-        <Link to={"/home"}> Home </Link>
-        <Link to={"/Products/Sapato feminino"}> Sapatos Femininos </Link>
-        <Link to={"/Products/Sapato masculino"}> Sapatos Masculinos </Link>
-      </Header>
-    </HomeContainer>
-  );
+  const url = import.meta.env.VITE_API_URL;
+  const User = useContext(UserContext).UserData;
+  const setUser = useContext(UserContext).SetUserData;
+
+  /* Dados externos iniciais: */
+  useEffect(() => {
+    let tokenSessao = localStorage.getItem("token");
+    if (!tokenSessao) {
+      return navigate("/");
+    }
+
+    const chave = { headers: { Authorization: `Bearer ${tokenSessao}` } };
+    let promisse1 = axios.get(`${url}/usuario-logado`, chave);
+    promisse1.then((resposta) => {
+      setUser({
+        name: resposta.data.name,
+        email: resposta.data.email,
+        tokenSessao,
+      });
+    });
+  }, []);
+
+  if (!User) {
+    return (
+      <HomeContainer>
+        <HeaderSite/>
+        <Loading>
+        {<ThreeDots width={"150px"} color="#FFFFFF" />}
+        </Loading>
+      </HomeContainer>
+    );
+  }
+
+  if(User) {
+    return (
+      <HomeContainer>
+        <HeaderSite/>
+        
+      </HomeContainer>
+    );
+  }
 }
 
 const HomeContainer = styled.div`
@@ -39,27 +58,10 @@ const HomeContainer = styled.div`
   padding: 15px;
   height: 100%;
 `;
-const Header = styled.header`
+const Loading = styled.div`
+  height: 100%;
+  width: 100%;
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 2px 5px 2px;
-  margin-bottom: 15px;
-  font-size: 26px;
-  color: white;
-  a {
-    width: 170px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 15px;
-    padding-top: unset;
-    :hover {
-      border: 2px solid white;
-    }
-  }
-`;
-const Pointer = styled.div`
-  cursor: pointer;
-`;
+`
