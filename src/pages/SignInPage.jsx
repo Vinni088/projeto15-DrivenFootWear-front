@@ -32,11 +32,12 @@ export default function SignInPage() {
       email,
       password: senha,
     };
-    let promisse = axios.post(`${url}/login`, dadosLogin);
+    let promisse = axios.post(`${url}/sign-in`, dadosLogin);
     promisse.then((resposta) => Sucesso(resposta));
     promisse.catch((resposta) => Fail(resposta));
   }
   function Sucesso(resposta) {
+    console.log(resposta);
     let token = resposta.data;
     const chave = {
       headers: {
