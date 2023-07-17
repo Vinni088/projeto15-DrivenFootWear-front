@@ -33,8 +33,8 @@ export default function HomePage() {
 
     let promisse2 = axios.get(`${url}/products`, chave);
     promisse2.then((resposta) => {
-      console.log(resposta)
-      SetProdutos(resposta.data)
+      console.log(resposta);
+      SetProdutos(resposta.data);
     });
   }, []);
 
@@ -54,11 +54,15 @@ export default function HomePage() {
         <ProductSpace>
           {Produtos.map((produto) => {
             return (
-            <ProductBox key={produto._id} onClick={()=> navigate(`/Products/add/${produto._id}`)}>
-              <img src={produto.foto}/>
-              <span> {produto.name} </span>
-            </ProductBox>
-          )})}
+              <ProductBox
+                key={produto._id}
+                onClick={() => navigate(`/Products/add/${produto._id}`)}
+              >
+                <img src={produto.foto} />
+                <span> {produto.name} </span>
+              </ProductBox>
+            );
+          })}
         </ProductSpace>
       </HomeContainer>
     );
@@ -90,6 +94,19 @@ const ProductSpace = styled.div`
   height: 100%;
 
   overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: white;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: lightgray;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: gray;
+  }
 `;
 const ProductBox = styled.div`
   display: flex;
@@ -102,11 +119,13 @@ const ProductBox = styled.div`
   border-radius: 20px;
   border: white 2px solid;
   text-align: center;
+  background-color: white;
   :hover {
     border: gray 2px solid;
     cursor: pointer;
   }
   img {
     height: 100px;
+    border-radius: 15px;
   }
 `;

@@ -3,7 +3,7 @@ import HeaderSite from "../components/Headers";
 import styled from "styled-components";
 import { UserContext } from "/src/App.jsx";
 import { ThreeDots } from "react-loader-spinner";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 
 export default function ProductPage() {
@@ -12,6 +12,7 @@ export default function ProductPage() {
   const url = import.meta.env.VITE_API_URL;
   const User = useContext(UserContext).UserData;
   const setUser = useContext(UserContext).SetUserData;
+  let [Produto, SetProduto] = useState(null);
   const params = useParams();
 
   /* Dados externos iniciais: */
@@ -31,11 +32,14 @@ export default function ProductPage() {
       });
     });
 
-    /*let promisse2 = axios.get(`${url}/products`, chave);
-    promisse2.then((resposta) => SetProdutos(resposta.data));*/
+    let promisse2 = axios.get(`${url}/products/${params.IdProduct}`, chave);
+    promisse2.then((resposta) => {
+      console.log(resposta.data);
+      SetProduto(resposta.data);
+    });
   }, []);
 
-  if (!User) {
+  if (!User || !Produto) {
     return (
       <HomeContainer>
         <HeaderSite />
@@ -44,12 +48,18 @@ export default function ProductPage() {
     );
   }
 
-  if (User) {
+  if (User && Produto) {
     return (
       <HomeContainer>
         <HeaderSite />
         <ProductSpace>
-            Produto de id {params.IdProduct}
+          <img src={Produto.foto} />
+          <ProductData>
+            <span> {Produto.name} </span>
+            <span> Preço: {Produto.price} R$ </span>
+            <span> Gostaria de adicionar ao seu Carrinho? </span>
+            <button>Adicionar ao carrinho</button>
+          </ProductData>
         </ProductSpace>
       </HomeContainer>
     );
@@ -71,7 +81,6 @@ const Loading = styled.div`
 `;
 const ProductSpace = styled.div`
   display: flex;
-  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
   gap: 20px;
@@ -81,23 +90,33 @@ const ProductSpace = styled.div`
   height: 100%;
 
   overflow-y: scroll;
+  img {
+    width: 60%;
+    border-radius: 20px;
+  }
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: white;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: lightgray;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: gray;
+  }
 `;
-const ProductBox = styled.div`
+const ProductData = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  gap: 5px;
-  width: 150px;
-  height: 150px;
-  border-radius: 20px;
-  border: white 2px solid;
-  text-align: center;
-  :hover {
-    border: gray 2px solid;
-    cursor: pointer;
-  }
-  img {
-    height: 100px;
+  align-items: flex-start;
+  gap: 15px;
+  span {
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
   }
 `;
