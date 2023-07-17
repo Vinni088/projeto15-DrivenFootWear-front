@@ -47,7 +47,7 @@ const DivHeader = styled.div`
     border-radius: 15px;
     padding-top: unset;
     :hover {
-      border: 2px solid white;
+      border: 1px solid white;
     }
   }
 `;

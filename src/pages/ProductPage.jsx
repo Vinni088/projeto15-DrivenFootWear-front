@@ -39,6 +39,21 @@ export default function ProductPage() {
     });
   }, []);
 
+  function AdicionarProduto(Id){
+    let tokenSessao = localStorage.getItem("token");
+
+    let promisse = axios.post(`${url}/cart/${Id}`, User.email, {
+        headers: {
+          Authorization: `Bearer ${tokenSessao}`,
+        },
+      });
+    promisse.then(resposta => {
+        alert("Item adicionado ao seu carrinho, voltando à Página principal.")
+        navigate("/home")
+    });
+    promisse.catch(resposta => {console.log(resposta)});
+  }
+
   if (!User || !Produto) {
     return (
       <HomeContainer>
@@ -58,7 +73,7 @@ export default function ProductPage() {
             <span> {Produto.name} </span>
             <span> Preço: {Produto.price} R$ </span>
             <span> Gostaria de adicionar ao seu Carrinho? </span>
-            <button>Adicionar ao carrinho</button>
+            <button onClick={() => AdicionarProduto(params.IdProduct)} >Adicionar ao carrinho</button>
           </ProductData>
         </ProductSpace>
       </HomeContainer>
