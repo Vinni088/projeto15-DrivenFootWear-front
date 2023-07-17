@@ -15,7 +15,7 @@ export default function HomePage() {
   let [carrinho, setCarrinho] = useState([]);
   let [conta, setConta] = useState(0);
 
-  /* Dados externos iniciais: */
+  // Dados externos iniciais: 
 
   useEffect(() => {
     let tokenSessao = localStorage.getItem("token");
@@ -33,7 +33,7 @@ export default function HomePage() {
     });
 
     let lista = [];
-    
+    let valor = 0;
     let promisse2 = axios.get(`${url}/cart`, chave);
     promisse2.then((res) => {
       let lista_prov = res.data.itens;
@@ -42,17 +42,14 @@ export default function HomePage() {
         promisse3.then((res) => {
             lista.push(res.data);
             setCarrinho(lista);
+            valor = valor + res.data.price
+            setConta(valor)
         });
       }
     });
     promisse2.catch((res) => console.log(res));
     
     console.log(lista);
-    let valor = 0;
-    for (let i = 0; i < lista.length; i++) {
-        valor += lista[i].price;
-    }
-    console.log(valor);
   }, []);
 
   if (!User || !carrinho) {
@@ -64,6 +61,14 @@ export default function HomePage() {
     );
   }
 
+  function Finalizar(valor, metodo) {
+    alert(`
+        Sua conta no valor de ${valor} será finalizada agora.
+        Enviaremos os dados de pagamento via ${metodo} 
+        no email cadastrado.
+    `)
+    navigate("/")
+  }
   if (User) {
     return (
       <HomeContainer>
@@ -80,7 +85,23 @@ export default function HomePage() {
           })}
         </ProductSpace>
         <CheckoutData>
-            <h1> Seu total é {conta}R$</h1>
+            <h1> 
+                Seu total é {conta}R$
+            </h1>
+            <PayOpt>
+                <h1>Deseja Finalizar sua compra com:</h1>
+                <div>
+                    <button onClick={() => Finalizar(conta,"Cartão de credito")}>
+                        Cartão de credito
+                    </button>
+                    <button onClick={() => Finalizar(conta,"Cartão de debito")}>
+                        Cartão de debito
+                    </button>
+                    <button onClick={() => Finalizar(conta,"Boleto")}>
+                        Boleto
+                    </button>
+                </div>
+            </PayOpt>
         </CheckoutData>
       </HomeContainer>
     );
@@ -147,5 +168,41 @@ const ProductBox = styled.div`
   }
 `;
 const CheckoutData = styled.div`
-    
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+`
+const PayOpt = styled.div`
+    width: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    h1 {
+        text-align: center;
+    }
+    button {
+        outline: none;
+        border: none;
+        border-radius: 5px;
+        background-color: white;
+        font-size: 20px;
+        font-weight: 600;
+        color: black;
+        cursor: pointer;
+        width: unset;
+        padding: unset;
+        :hover {
+            background-color: lightgray;
+        }
+    }
+    div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+    }
 `
