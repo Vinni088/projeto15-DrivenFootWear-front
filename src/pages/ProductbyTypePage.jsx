@@ -41,7 +41,7 @@ export default function HomePage() {
     });
   }, []);
 
-  if (!User) {
+  if (!User || !Produtos) {
     return (
       <HomeContainer>
         <HeaderSite />
@@ -50,7 +50,7 @@ export default function HomePage() {
     );
   }
 
-  if (User) {
+  if (User && Produtos) {
     return (
       <HomeContainer>
         <HeaderSite />
