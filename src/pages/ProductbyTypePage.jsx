@@ -129,6 +129,7 @@ const ProductBox = styled.div`
   }
   img {
     height: 100px;
+    max-width: 98%;
     border-radius: 15px;
   }
 `;
