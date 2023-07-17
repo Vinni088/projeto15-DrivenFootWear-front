@@ -62,12 +62,20 @@ export default function HomePage() {
   }
 
   function Finalizar(valor, metodo) {
-    alert(`
-        Sua conta no valor de ${valor} será finalizada agora.
-        Enviaremos os dados de pagamento via ${metodo} 
-        no email cadastrado.
+    
+    let tokenSessao = localStorage.getItem("token");
+    const chave = { headers: { Authorization: `Bearer ${tokenSessao}` } };
+    let promisse = axios.post(`${url}/Checkout`, {payment: metodo},  chave)
+    promisse.then(res => {
+        console.log(res)
+        alert(`
+        Sua conta no valor de ${valor} será finalizada.
+        Enviaremos os dados de pagamento via 
+        ${metodo} no email cadastrado.
     `)
-    navigate("/")
+        navigate("/")
+    })
+    
   }
   if (User) {
     return (
