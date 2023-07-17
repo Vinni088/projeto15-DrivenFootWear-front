@@ -1,10 +1,11 @@
 import axios from "axios";
-import HeaderSite from "../components/Headers";
 import styled from "styled-components";
 import { UserContext } from "/src/App.jsx";
+import HeaderSite from "../components/Headers";
 import { ThreeDots } from "react-loader-spinner";
-import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+
 
 export default function HomePage() {
   /* Ferramentas da Página */
@@ -13,6 +14,7 @@ export default function HomePage() {
   const User = useContext(UserContext).UserData;
   const setUser = useContext(UserContext).SetUserData;
   let [Produtos, SetProdutos] = useState([]);
+  let params = useParams();
 
   /* Dados externos iniciais: */
   useEffect(() => {
@@ -20,7 +22,7 @@ export default function HomePage() {
     if (!tokenSessao) {
       return navigate("/");
     }
-
+    SetProdutos([])
     const chave = { headers: { Authorization: `Bearer ${tokenSessao}` } };
     let promisse1 = axios.get(`${url}/usuario-logado`, chave);
     promisse1.then((resposta) => {
@@ -33,8 +35,9 @@ export default function HomePage() {
 
     let promisse2 = axios.get(`${url}/products`, chave);
     promisse2.then((resposta) => {
-      console.log(resposta);
-      SetProdutos(resposta.data);
+      let array = resposta.data;
+      let array_filtered = array.filter(produto => produto.type === params.ProductType);
+      SetProdutos(array_filtered);
     });
   }, []);
 
